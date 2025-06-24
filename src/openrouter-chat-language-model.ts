@@ -53,6 +53,7 @@ type OpenRouterChatConfig = {
   url: (options: { modelId: string; path: string }) => string;
   fetch?: typeof fetch;
   extraBody?: Record<string, unknown>;
+  supportsStructuredOutputs?: boolean;
 };
 
 type DoGenerateOutput = Awaited<ReturnType<LanguageModelV1['doGenerate']>>;
@@ -73,6 +74,8 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
 
   private readonly config: OpenRouterChatConfig;
 
+  readonly supportsStructuredOutputs: boolean = false;
+
   constructor(
     modelId: OpenRouterChatModelId,
     settings: OpenRouterChatSettings,
@@ -81,6 +84,7 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
     this.modelId = modelId;
     this.settings = settings;
     this.config = config;
+    this.supportsStructuredOutputs = config.supportsStructuredOutputs ?? false;
   }
 
   get provider(): string {
@@ -161,7 +165,13 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
       case 'object-json': {
         return {
           ...baseArgs,
-          response_format: { type: 'json_object' },
+          response_format:
+            baseArgs.response_format?.type === 'json'
+              ? {
+                  type: 'json_object',
+                  json_schema: baseArgs.response_format.schema,
+                }
+              : { type: 'json_object' },
         };
       }
 
