@@ -157,6 +157,8 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
       ...extraCallingBody,
     };
 
+    console.log('base args', baseArgs);
+
     console.log('args', {
       args: {
         ...baseArgs,
