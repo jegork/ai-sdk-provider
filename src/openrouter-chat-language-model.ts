@@ -53,7 +53,6 @@ type OpenRouterChatConfig = {
   url: (options: { modelId: string; path: string }) => string;
   fetch?: typeof fetch;
   extraBody?: Record<string, unknown>;
-  supportsStructuredOutputs?: boolean;
 };
 
 type DoGenerateOutput = Awaited<ReturnType<LanguageModelV1['doGenerate']>>;
@@ -84,7 +83,8 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
     this.modelId = modelId;
     this.settings = settings;
     this.config = config;
-    this.supportsStructuredOutputs = config.supportsStructuredOutputs ?? false;
+    this.supportsStructuredOutputs =
+      settings.supportsStructuredOutputs ?? false;
   }
 
   get provider(): string {

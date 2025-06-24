@@ -43,4 +43,5 @@ A unique identifier representing your end-user, which can help OpenRouter to
 monitor and detect abuse. Learn more.
 */
   user?: string;
+  supportsStructuredOutputs?: boolean;
 } & OpenRouterSharedSettings;
